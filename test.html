@@ -1,0 +1,68 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		
+		<link rel="stylesheet" href="jquery-ui.css">
+		
+		<script src="https://code.jquery.com/jquery-3.4.1.js" integrity=
+		"sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+		
+		<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+		
+		<script src="jquery-ui.js"></script>
+		<script>
+  // compile the template
+  var template = Handlebars.compile("Handlebars <b>{{doesWhat}}</b>");
+  // execute the compiled template and print the output to the console
+  console.log(template({ doesWhat: "rocks!" }));
+</script>
+		
+		<script>
+			$("document").ready(function() {
+			
+			$.widget( "custom.superAutoComplete", $.ui.autocomplete, {
+    _renderItem: function( ul, item ) {
+  return $( "<li>" )
+    .attr( "data-value", item.value )
+    .append( item.label )
+    .appendTo( ul );
+}
+});
+				$( "#birds" ).superAutoComplete({
+      source: function( request, response ) {
+        response(["<h1>a</h1>", "b", "c"]);
+      },
+      minLength: 1,
+      select: function( event, ui ) {
+        log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+      },
+	  classes: {
+    "ui-menu": "highlight",
+	"ui-autocomplete": "hello"
+  },
+  position: { of : ".ui-widget1"},
+    } );
+			});
+		</script>
+		
+	</head>
+	<body>
+	ui-menu
+		<div class="ui-widget1">
+  <label for="birds">Birds: </label>
+  <input id="birds">
+</div>
+		<div class="ui-widget">
+			<label for="tags">Tags: </label>
+			<input>
+			<div class="input-group mb-3">
+				<input type="text" id="tags" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
+				<div class="input-group-append">
+				<button class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

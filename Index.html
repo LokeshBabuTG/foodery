@@ -1,0 +1,85 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		
+		<link rel="stylesheet" href="jquery-ui.css">
+		
+		<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+		
+		<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+		
+		<script src="jquery-ui.js"></script>
+
+	</head>
+	<body>
+		<div class="container">
+			<div class="row align-items-center ">
+				<div class="col-2"></div>
+				<div class="col-8">
+					<div class="input-group mb-3">
+						<input type="text" id="foodSearchTextBox" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
+						<div class="input-group-append">
+							<button class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
+						</div>
+					</div>
+				</div>
+				<div class="col-2"></div>
+			</div>
+		</div>
+	</body>
+	<script>
+
+		function handleBrandedFood(food) {
+		}
+
+		function handleSurveyFood(food) {
+			require('fs').readFile('testHandelbar.txt', (err, data) => {
+				if (err) throw err;
+
+				console.log(data.toString());
+			})
+		}
+
+		function handleFood(food) {
+			if(food.foodClass == "Branded")
+				handleBrandedFood(food);
+			else
+				handleSurveyFood(food);
+		}
+
+		$.widget( "custom.superAutoComplete", $.ui.autocomplete, {
+			_renderItem: function( ul, item ) {
+				var listItemTemplate = Handlebars.compile("{{label}}");
+				return $( "<li>" )
+						.attr( "data-value", item.label )
+						.append( listItemTemplate(item) )
+						.addClass("list-group-item")
+						.appendTo( ul );
+			}
+		});
+
+		$("#foodSearchTextBox").superAutoComplete({
+			source: function( request, response ) {
+				$.getJSON( "https://api.nal.usda.gov/fdc/v1/search", {
+					"api_key" : "ipPYZKUsqhPmNHZNYdldTw6ZV3y1CvpDNg2CpFC6",
+					"generalSearchInput" : request.term
+				}, function( data, status, xhr ) {
+					response(data.foods.slice(0, 11).map(function(food) {
+						return {"label" : food.description, "fdcId" : food.fdcId, "value" : food.description};
+					}));
+				});
+			},
+			select: function( event, ui ) {
+				$.getJSON( "https://api.nal.usda.gov/fdc/v1/" + ui.item.fdcId, {
+					"api_key" : "ipPYZKUsqhPmNHZNYdldTw6ZV3y1CvpDNg2CpFC6"
+				}, function( data, status, xhr ) {
+					handleFood(data);
+				});
+				console.log(event);
+			},
+			minLength: 3
+		});
+	</script>
+</html>

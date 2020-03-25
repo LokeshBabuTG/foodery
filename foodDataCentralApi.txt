@@ -1,0 +1,5 @@
+export class Api {
+    static apiKey : string = "ipPYZKUsqhPmNHZNYdldTw6ZV3y1CvpDNg2CpFC6";
+    static apiUrl : string = "https://api.nal.usda.gov/fdc/v1/search?";
+    static apiUrlWithKey : string = "https://api.nal.usda.gov/fdc/v1/search?api_key=ipPYZKUsqhPmNHZNYdldTw6ZV3y1CvpDNg2CpFC6&"
+}
