@@ -28,33 +28,57 @@
 				<div class="col-2"></div>
 			</div>
 		</div>
+		<div class="container">
+			<div class="row align-items-center ">
+				<div class="col-2"></div>
+				<div class="col-8">
+					<div class="accordion overflow-auto" id="foodNutrientsAccordion" style="height: 600px;overflow: scroll;">
+					</div>
+				</div>
+				<div class="col-2"></div>
+			</div>
+		</div>
 	</body>
 	<script>
+
+		var foodNutrientsAccordionCardTemplate = Handlebars.compile(`
+			<div class="card">
+				<div class="card-header" id="{{id}}" data-toggle="collapse" data-target="#collapse_{{id}}" aria-controls="#collapse_{{id}}">
+					<h2 class="mb-0">
+					<button class="btn btn-link" type="button">{{nutrient.name}}</button>
+					</h2>
+				</div>
+
+				<div id="collapse_{{id}}" class="collapse"  data-parent="#foodNutrientsAccordion">
+					<div class="card-body">
+						Quantity : {{amount}} {{nutrient.unitName}}
+						<br>
+						Description : {{foodNutrientDerivation.description}}
+						<br>
+					</div>
+				</div>
+			</div>
+		`);
 
 		function handleBrandedFood(food) {
 		}
 
 		function handleSurveyFood(food) {
-			require('fs').readFile('testHandelbar.txt', (err, data) => {
-				if (err) throw err;
 
-				console.log(data.toString());
-			})
 		}
 
 		function handleFood(food) {
-			if(food.foodClass == "Branded")
-				handleBrandedFood(food);
-			else
-				handleSurveyFood(food);
+			$.each(food.foodNutrients, function(i, nutrient) {
+				$("#foodNutrientsAccordion").append(foodNutrientsAccordionCardTemplate(nutrient));
+			});
+			food.foodClass === "Branded" ?  handleBrandedFood(food) : handleSurveyFood(food);
 		}
 
 		$.widget( "custom.superAutoComplete", $.ui.autocomplete, {
 			_renderItem: function( ul, item ) {
-				var listItemTemplate = Handlebars.compile("{{label}}");
 				return $( "<li>" )
 						.attr( "data-value", item.label )
-						.append( listItemTemplate(item) )
+						.append( item.label )
 						.addClass("list-group-item")
 						.appendTo( ul );
 			}
